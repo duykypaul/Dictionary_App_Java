@@ -1,6 +1,7 @@
 package com.dic;
 
 import java.awt.Cursor;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame {
@@ -11,6 +12,7 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
+        this.setIconImage(new ImageIcon("login.png").getImage());
         initData();
         this.setLocationRelativeTo(null);
     }
@@ -41,10 +43,11 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Đăng nhập");
         setBackground(new java.awt.Color(52, 152, 219));
         setResizable(false);
 
-        jPanelMain.setBackground(new java.awt.Color(137, 196, 244));
+        jPanelMain.setBackground(new java.awt.Color(0, 174, 255));
 
         optionLogin.add(jOptionLoginClient);
         jOptionLoginClient.setSelected(true);

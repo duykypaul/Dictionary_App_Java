@@ -2,6 +2,7 @@ package com.dic;
 
 import java.awt.Cursor;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class Add extends javax.swing.JFrame {
@@ -11,6 +12,7 @@ public class Add extends javax.swing.JFrame {
 
     public Add() {
         initComponents();
+        this.setIconImage(new ImageIcon("add.png").getImage());
         setCursor();
         this.setLocationRelativeTo(null);
     }
@@ -37,6 +39,7 @@ public class Add extends javax.swing.JFrame {
         jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Thêm từ mới");
         setResizable(false);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N

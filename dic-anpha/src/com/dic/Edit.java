@@ -2,6 +2,7 @@ package com.dic;
 
 import java.awt.Cursor;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 
@@ -11,6 +12,7 @@ public class Edit extends javax.swing.JFrame {
 
     public Edit() {
         initComponents();
+        this.setIconImage(new ImageIcon("writing.png").getImage());
         setCursor();
         this.setLocationRelativeTo(null);
 
@@ -37,6 +39,7 @@ public class Edit extends javax.swing.JFrame {
         jLabelOK = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Chỉnh sửa từ \"" + jFormattedTextField1.getText() + "\"");
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N

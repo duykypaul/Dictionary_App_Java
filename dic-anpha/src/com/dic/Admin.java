@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
@@ -19,7 +20,7 @@ public class Admin extends javax.swing.JFrame {
 //        initData();
         initComponents();
         jBoxSearch.requestFocusInWindow();
-
+        this.setIconImage(new ImageIcon("book.png").getImage());
         setCursor();
         this.setLocationRelativeTo(null);
     }
@@ -68,6 +69,7 @@ public class Admin extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Admin");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 174, 255));
@@ -309,7 +311,8 @@ public class Admin extends javax.swing.JFrame {
 
     private void jListWordActionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListWordActionMouseClicked
         // TODO add your handling code here:
-        for (Word ele : Dictionary.listWord) {
+        for (Word ele 
+                : Dictionary.listWord) {
             if (jListWordAction.getSelectedValue().equals(ele.getWord_taget())) {
                 jFormattedTextFieldVoca.setText(ele.getWord_taget());
                 jLabelPrce.setText("Phát âm");

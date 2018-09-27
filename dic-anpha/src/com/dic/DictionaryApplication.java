@@ -6,6 +6,7 @@ import java.awt.Cursor;
 import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
@@ -22,6 +23,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
 
     public DictionaryApplication() {
         initComponents();
+        this.setIconImage(new ImageIcon("book.png").getImage());
         setCursor();
         this.setLocationRelativeTo(null);
     }
@@ -72,6 +74,8 @@ public class DictionaryApplication extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Từ điển Anh Việt");
+        setIconImage(new ImageIcon("/img/book.png").getImage());
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 174, 255));
@@ -447,10 +451,21 @@ public class DictionaryApplication extends javax.swing.JFrame {
     private void jLabelSaveModeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelSaveModeMouseClicked
         // TODO add your handling code here:
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
+            
             jLabelSave.setVisible(false);
             searchMode = false;
             saveMode = true;
             recentMode = false;
+            
+            DLM.clear();
+            for (Word ele
+                    : Dictionary.myWords) {
+                if (ele.getWord_taget().indexOf("") == 0) {
+                    DLM.addElement(ele.getWord_taget());
+                }
+            }
+            jListWordAction.setModel(DLM);
+            
             jLabelSearchMode.setBackground(new Color(28, 199, 208));
             jLabelSaveMode.setBackground(new Color(255, 0, 0));
             jLabelRecentMode.setBackground(new Color(28, 199, 208));
@@ -459,7 +474,6 @@ public class DictionaryApplication extends javax.swing.JFrame {
             jFormattedTextFieldVoca.setText("Từ vựng");
             jLabelPrce.setText("Phát âm");
             jLabelExpl.setText("Nghĩa của từ");
-            DLM.clear();
         }
     }//GEN-LAST:event_jLabelSaveModeMouseClicked
 
@@ -470,6 +484,16 @@ public class DictionaryApplication extends javax.swing.JFrame {
             searchMode = false;
             saveMode = false;
             recentMode = true;
+            
+            DLM.clear();
+            for (Word ele
+                    : Dictionary.recentWords) {
+                if (ele.getWord_taget().indexOf("") == 0) {
+                    DLM.addElement(ele.getWord_taget());
+                }
+            }
+            jListWordAction.setModel(DLM);
+            
             jLabelSearchMode.setBackground(new Color(28, 199, 208));
             jLabelSaveMode.setBackground(new Color(28, 199, 208));
             jLabelRecentMode.setBackground(new Color(255, 0, 0));
@@ -478,7 +502,6 @@ public class DictionaryApplication extends javax.swing.JFrame {
             jFormattedTextFieldVoca.setText("Từ vựng");
             jLabelPrce.setText("Phát âm");
             jLabelExpl.setText("Nghĩa của từ");
-            DLM.clear();
         }
     }//GEN-LAST:event_jLabelRecentModeMouseClicked
 
