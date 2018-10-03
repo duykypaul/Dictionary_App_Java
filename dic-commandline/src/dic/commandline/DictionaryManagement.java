@@ -9,21 +9,50 @@ public class DictionaryManagement {
     private final String fileName = "data\\dictionaries.txt";
 
     // Tìm kiếm nhị phân Word
-    private int binarySreachWord(String str) {
+    public int binarySreachWord(String str) {
         int lo = 0, hi = Dictionary.listWord.size() - 1, mid;
-        while (lo < hi) {
+        while (lo <= hi) {
             mid = lo + (hi - lo) / 2;
             int cp = Dictionary.listWord.get(mid).compareTo(str);
 
             if (cp < 0) {
-                lo = mid;
+                lo = mid + 1;
             } else if (cp > 0) {
-                hi = mid;
+                hi = mid - 1;
             } else {
                 return mid;
             }
         }
         return -1;
+    }
+
+    // Tìm kiếm vị trí insert
+    public int posInsert(Word w) {
+        int lo = 0, hi = Dictionary.listWord.size() - 1, mid;
+        // Trường hợp list rỗng
+        if(Dictionary.listWord.isEmpty()) {
+            return 0;
+        }
+        
+        // Còn lại
+        while (true) {
+            mid = lo + (hi - lo) / 2;
+            int cp = Dictionary.listWord.get(mid).compareTo(w.getWord_taget());
+
+            if (cp < 0) {
+                lo = mid + 1;
+                if (lo > hi) {
+                    return lo;
+                }
+            } else if (cp > 0) {
+                hi = mid - 1;
+                if (hi < lo) {
+                    return hi + 1;
+                }
+            } else {
+                return -1;
+            }
+        }
     }
 
     // In toàn bộ từ
@@ -49,24 +78,18 @@ public class DictionaryManagement {
         for (int i = 0; i < num; i++) {
             System.out.print("Nhập từ muốn thêm: ");
             String spel = sc.nextLine();
-
-            boolean check = false;
-            for (Word ele
-                    : Dictionary.listWord) {
-                if (ele.getWord_taget().equals(spel.trim())) {
-                    System.out.println("Từ " + spel + " đã có trong từ điển!! Nhập lại...");
-                    check = true;
-                    i--;
-                    break;
-                }
-            }
-
-            if (!check) {
-                System.out.print("Nhập nghĩa Tiếng Việt: ");
-                String expl = sc.nextLine();
+            System.out.print("Nhập nghĩa Tiếng Việt: ");
+            String expl = sc.nextLine();
+            int pos = posInsert(new Word(spel, expl));
+            if(pos == Dictionary.listWord.size()) {
                 Dictionary.listWord.add(new Word(spel, expl));
+            } else if(pos == -1) {
+                System.out.println("Từ \"" + spel + "\" đã có trong từ điển. Nhập lại...");
+                i--;
+            } else {
+                Dictionary.listWord.add(pos,new Word(spel, expl));
+                System.out.println("Thành công");
             }
-
         }
         System.out.println("Thêm thành công " + num + " từ vào từ điển!");
     }
@@ -136,27 +159,27 @@ public class DictionaryManagement {
                 break;
             } else {
                 if (cp < 0) {
-                    lo = mid;
+                    lo = mid + 1;
                 } else {
-                    hi = mid;
+                    hi = mid - 1;
                 }
             }
         }
-        if(posStart == -1) {
+        if (posStart == -1) {
             System.out.println("Không có trong từ điển !!!");
         } else {
             int i = posStart;
-            while(     i < Dictionary.listWord.size() && 
-                       Dictionary.listWord.get(i).getWord_taget().indexOf(wordSearch) == 0) {
+            while (i < Dictionary.listWord.size()
+                    && Dictionary.listWord.get(i).getWord_taget().indexOf(wordSearch) == 0) {
                 listWordSearch.add(Dictionary.listWord.get(i));
                 i++;
             }
             int j = posStart;
-            while(     j >= 0 && Dictionary.listWord.get(j).getWord_taget().indexOf(wordSearch) == 0) {
+            while (j >= 0 && Dictionary.listWord.get(j).getWord_taget().indexOf(wordSearch) == 0) {
                 listWordSearch.add(Dictionary.listWord.get(j));
                 j--;
             }
-            
+
             Collections.sort(listWordSearch, new WordComparator());
 
             System.out.println("(Các) từ bắt đầu bằng \"" + wordSearch + "\": ");

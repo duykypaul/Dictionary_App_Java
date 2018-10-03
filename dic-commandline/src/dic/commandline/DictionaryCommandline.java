@@ -23,6 +23,7 @@ public class DictionaryCommandline {
             System.out.println("6. In tất cả các từ trong từ điển");
             System.out.println("7. Kết thúc");
             System.out.println("---------------------------------");
+            
             option = sc.nextInt();
 
             switch (option) {
