@@ -3,17 +3,11 @@ package dic.commandline;
 import java.util.*;
 
 public class DictionaryCommandline {
+
     DictionaryManagement DicMana = new DictionaryManagement();
     Scanner sc = new Scanner(System.in);
 
-    public void dictionaryBasic() {
-
-    }
-
-    public void dictionaryAdvanced() {
-
-    }
-    
+    // Menu option
     public void run() {
         DicMana.insertFromFile();
         int option;
@@ -22,11 +16,12 @@ public class DictionaryCommandline {
             System.out.println("-------Từ điển Anh - Việt--------");
             System.out.println("----------Nhập lựa chọn----------");
             System.out.println("1. Tra từ");
-            System.out.println("2. Thêm từ");
-            System.out.println("3. Sửa từ");
-            System.out.println("4. Xóa từ");
-            System.out.println("5. In tất cả các từ trong từ điển");
-            System.out.println("6. Kết thúc");
+            System.out.println("2. Tìm kiếm chính xác");
+            System.out.println("3. Thêm từ");
+            System.out.println("4. Sửa từ");
+            System.out.println("5. Xóa từ");
+            System.out.println("6. In tất cả các từ trong từ điển");
+            System.out.println("7. Kết thúc");
             System.out.println("---------------------------------");
             option = sc.nextInt();
 
@@ -35,22 +30,23 @@ public class DictionaryCommandline {
                     DicMana.dictionarySearcher();
                     break;
                 case 2:
-                    DicMana.insertFromCommandline();
+                    DicMana.dictionaryLookup();
                     break;
                 case 3:
-                    DicMana.editWordInDic();
+                    DicMana.insertFromCommandline();
                     break;
                 case 4:
-                    DicMana.deleteWordInDic();
+                    DicMana.editWordInDic();
                     break;
                 case 5:
+                    DicMana.deleteWordInDic();
+                    break;
+                case 6:
                     DicMana.showAllWords();
                     break;
             }
-            DicMana.dictionaryExportToFile();
-
-        } while (option >= 1 && option <= 5);
-        
+        } while (option >= 1 && option <= 6);
+        DicMana.dictionaryExportToFile();
     }
 
     public static void main(String[] args) {

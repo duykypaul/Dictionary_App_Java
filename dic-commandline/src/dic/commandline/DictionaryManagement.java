@@ -1,17 +1,32 @@
 package dic.commandline;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class DictionaryManagement {
 
     private Scanner sc = new Scanner(System.in);
-    private static final String fileName = "dictionaries.txt";
+    private final String fileName = "data\\dictionaries.txt";
 
+    // Tìm kiếm nhị phân Word
+    private int binarySreachWord(String str) {
+        int lo = 0, hi = Dictionary.listWord.size() - 1, mid;
+        while (lo < hi) {
+            mid = lo + (hi - lo) / 2;
+            int cp = Dictionary.listWord.get(mid).compareTo(str);
+
+            if (cp < 0) {
+                lo = mid;
+            } else if (cp > 0) {
+                hi = mid;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+
+    // In toàn bộ từ
     public void showAllWords() {
         if (!Dictionary.listWord.isEmpty()) {
             System.out.printf("%-4s%c%-20s%c%-20s\n", "STT", '|', "English", '|', "Vietnamese");
@@ -25,6 +40,7 @@ public class DictionaryManagement {
         }
     }
 
+    // Thêm vào list từ bàn phím
     public void insertFromCommandline() {
         System.out.println("---------Thêm từ vào từ điển---------");
         System.out.print("Nhập số lượng từ muốn thêm: ");
@@ -33,7 +49,7 @@ public class DictionaryManagement {
         for (int i = 0; i < num; i++) {
             System.out.print("Nhập từ muốn thêm: ");
             String spel = sc.nextLine();
-            
+
             boolean check = false;
             for (Word ele
                     : Dictionary.listWord) {
@@ -44,17 +60,18 @@ public class DictionaryManagement {
                     break;
                 }
             }
-            
-            if(!check) {
+
+            if (!check) {
                 System.out.print("Nhập nghĩa Tiếng Việt: ");
                 String expl = sc.nextLine();
                 Dictionary.listWord.add(new Word(spel, expl));
-            } 
-            
+            }
+
         }
         System.out.println("Thêm thành công " + num + " từ vào từ điển!");
     }
 
+    // Thêm vào list từ file
     public void insertFromFile() {
         BufferedReader br = null;
 
@@ -64,7 +81,8 @@ public class DictionaryManagement {
 
             while (line != null) {
 
-                if (line.indexOf("\t") == -1) {
+                if (line.contains("\t")) {
+                } else {
                     line = br.readLine();
                     continue;
                 }
@@ -72,8 +90,8 @@ public class DictionaryManagement {
                 Dictionary.listWord.add(w);
                 line = br.readLine();
             }
-
             br.close();
+            Collections.sort(Dictionary.listWord, new WordComparator());
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             System.out.println("Error " + ex);
         } catch (IOException ex) {
@@ -81,22 +99,22 @@ public class DictionaryManagement {
         }
     }
 
+    // Tìm kiếm từ chính xác 
     public void dictionaryLookup() {
-        System.out.println("-----------LOOK UP------------");
-        System.out.print("Enter word: ");
+        System.out.println("-----------Tìm kiếm chính xác------------");
+        System.out.print("Nhập từ : ");
         String wordLookup = sc.nextLine();
-        for (Word ele
-                : Dictionary.listWord) {
-            if (ele.getWord_taget().equals(wordLookup)) {
-                System.out.println("Lookup Success!");
-                System.out.print("Your word is: ");
-                ele.printWord();
-                return;
-            }
+        int posLookUpW = binarySreachWord(wordLookup);
+        if (posLookUpW == -1) {
+            System.out.println("Không tìm thấy từ: " + wordLookup);
+        } else {
+            System.out.println("Đã tìm thấy từ !");
+            System.out.print("Từ của bạn là: ");
+            Dictionary.listWord.get(posLookUpW).printWord();
         }
-        System.out.println("Word Not Found!");
     }
 
+    // Tìm kiếm từ thông minh
     public void dictionarySearcher() {
         sc = new Scanner(System.in);
         System.out.println("----Tìm kiếm từ tiếng anh----");
@@ -105,69 +123,102 @@ public class DictionaryManagement {
 
         ArrayList<Word> listWordSearch = new ArrayList<>();
 
-        for (Word ele
-                : Dictionary.listWord) {
-            if (ele.getWord_taget().indexOf(wordSearch) == 0) {
-                listWordSearch.add(ele);
+        int posStart = -1;
+        int lo = 0, hi = Dictionary.listWord.size() - 1, mid;
+        OUTER:
+        while (lo < hi) {
+            mid = lo + (hi - lo) / 2;
+            int cp = Dictionary.listWord.get(mid).compareTo(wordSearch);
+            int posInW = Dictionary.listWord.get(mid).getWord_taget().indexOf(wordSearch);
+
+            if (posInW == 0) {
+                posStart = mid;
+                break;
+            } else {
+                if (cp < 0) {
+                    lo = mid;
+                } else {
+                    hi = mid;
+                }
             }
         }
-
-        if (listWordSearch.isEmpty()) {
+        if(posStart == -1) {
             System.out.println("Không có trong từ điển !!!");
         } else {
-            System.out.println("(Các) từ bắt đầu bằng \"" + wordSearch + "\": ");
-            int i = 1;
-            for (Word ele
-                    : listWordSearch) {
-                System.out.printf("%-4d", i);
-                ele.printWord();
+            int i = posStart;
+            while(     i < Dictionary.listWord.size() && 
+                       Dictionary.listWord.get(i).getWord_taget().indexOf(wordSearch) == 0) {
+                listWordSearch.add(Dictionary.listWord.get(i));
                 i++;
             }
+            int j = posStart;
+            while(     j >= 0 && Dictionary.listWord.get(j).getWord_taget().indexOf(wordSearch) == 0) {
+                listWordSearch.add(Dictionary.listWord.get(j));
+                j--;
+            }
+            
+            Collections.sort(listWordSearch, new WordComparator());
+
+            System.out.println("(Các) từ bắt đầu bằng \"" + wordSearch + "\": ");
+            int start = 1;
+            for (Word ele
+                    : listWordSearch) {
+                System.out.printf("%-6d", start);
+                ele.printWord();
+                start++;
+            }
         }
     }
 
+    // Chỉnh sửa từ
     public void editWordInDic() {
         System.out.println("--------Sửa từ trong từ điển--------");
-        System.out.println("Nhập từ bạn muốn sửa: ");
+        System.out.print("Nhập từ bạn muốn sửa: ");
         String editW = sc.nextLine();
-        for (int i = 0; i < Dictionary.listWord.size(); i++) {
-            if (Dictionary.listWord.get(i).getWord_taget().equals(editW)) {
-                System.out.println("Đã thấy từ " + editW + " trong từ điển!");
-                System.out.print("Nhập từ thay thế: ");
-                String spel = sc.nextLine();
-                System.out.print("Nhập nghĩa tiếng việt:");
-                String expl = sc.nextLine();
-                Dictionary.listWord.set(i, new Word(spel, expl));
-                System.out.println("Thêm thành công!!");
-                return;
-            }
+        int posEditW = binarySreachWord(editW);
+        if (posEditW == -1) {
+            System.out.println("Không tìm thấy từ: " + editW);
+        } else {
+            System.out.println("Đã thấy từ " + editW + " trong từ điển!");
+            System.out.print("Nhập từ thay thế: ");
+            String spel = sc.nextLine();
+            System.out.print("Nhập nghĩa tiếng việt:");
+            String expl = sc.nextLine();
+            Dictionary.listWord.set(posEditW, new Word(spel, expl));
+            System.out.println("Thêm thành công!!");
         }
-        System.out.println("Không tìm thấy từ: " + editW);
     }
 
+    // Xóa từ
     public void deleteWordInDic() {
         System.out.println("--------Xóa từ trong từ điển--------");
-        System.out.println("Nhập từ bạn muốn xóa: ");
+        System.out.print("Nhập từ bạn muốn xóa: ");
         String delW = sc.nextLine();
-        for (int i = 0; i < Dictionary.listWord.size(); i++) {
-            if (Dictionary.listWord.get(i).getWord_taget().equals(delW)) {
-                System.out.println("Đã thấy từ " + delW + " trong từ điển!");
-                System.out.println("Bạn có muốn xóa từ " + delW + " không? (Y/N)?");
-                char option = sc.next().charAt(0);
-                if (option == 'Y' || option == 'y') {
-                    Dictionary.listWord.remove(i);
+        int posDelW = binarySreachWord(delW);
+        if (posDelW == -1) {
+            System.out.println("Không tìm thấy từ: " + delW);
+        } else {
+            System.out.println("Đã thấy từ " + delW + " trong từ điển!");
+            System.out.print("Bạn có muốn xóa từ " + delW + " không? (Y/N)? ");
+            char option = sc.nextLine().charAt(0);
+            switch (option) {
+                case 'Y':
+                case 'y':
+                    Dictionary.listWord.remove(posDelW);
                     System.out.println("Xóa thành công!!");
-                } else if (option == 'N' || option == 'n') {
+                    break;
+                case 'N':
+                case 'n':
                     System.out.println("Xóa không thành công!!");
-                } else {
+                    break;
+                default:
                     System.out.println("Lỗi");
-                }
-                return;
+                    break;
             }
         }
-        System.out.println("Không tìm thấy từ: " + delW);
     }
 
+    // Xuất từ điển ra file
     public void dictionaryExportToFile() {
         BufferedWriter bw = null;
         try {

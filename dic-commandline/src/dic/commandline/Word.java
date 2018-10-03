@@ -1,5 +1,7 @@
 package dic.commandline;
 
+import java.util.*;
+
 public class Word {
 
     private String word_taget;
@@ -12,7 +14,8 @@ public class Word {
         this.word_taget = word_taget;
         this.word_explain = word_explain;
     }
-
+    
+    // Khởi tạo Word từ định dạng dòng trong 1 file (có dấu tab)
     public Word(String lineInFile) {
         this.word_taget = lineInFile.substring(0, lineInFile.indexOf("\t"));
         this.word_explain = lineInFile.substring(lineInFile.indexOf("\t") + 1);
@@ -36,5 +39,18 @@ public class Word {
 
     public void printWord() {
         System.out.printf("%-20s%-20s\n", word_taget, word_explain);
+    }
+    
+    public int compareTo(String str) {
+        return this.word_taget.compareTo(str);
+    }
+    
+}
+
+// Tạo class so sánh 2 Word
+class WordComparator implements Comparator<Word> {
+    @Override
+    public int compare(Word w1, Word w2) {
+        return w1.getWord_taget().compareTo(w2.getWord_taget());
     }
 }
