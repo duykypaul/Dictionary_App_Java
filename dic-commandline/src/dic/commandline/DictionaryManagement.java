@@ -114,7 +114,6 @@ public class DictionaryManagement {
                 line = br.readLine();
             }
             br.close();
-            Collections.sort(Dictionary.listWord, new WordComparator());
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             System.out.println("Error " + ex);
         } catch (IOException ex) {

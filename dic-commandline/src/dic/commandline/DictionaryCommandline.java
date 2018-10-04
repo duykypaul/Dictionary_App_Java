@@ -4,8 +4,8 @@ import java.util.*;
 
 public class DictionaryCommandline {
 
-    DictionaryManagement DicMana = new DictionaryManagement();
-    Scanner sc = new Scanner(System.in);
+    static DictionaryManagement DicMana = new DictionaryManagement();
+    static Scanner sc = new Scanner(System.in);
 
     // Menu option
     public void run() {
